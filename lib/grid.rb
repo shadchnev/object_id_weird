@@ -36,10 +36,16 @@ class Grid
     cells.all? {|cell| cell.solved?}
   end
 
-  def candidates_for(current_cell, match)
-    neighbours = cells.select{|cell| cell.send(match) == current_cell.send(match)}
+  def group_candidates_for(current_cell, group)
+    neighbours = cells.select{|cell| cell.send(group) == current_cell.send(group)}
     solved_neighbours = neighbours.select{|cell| cell.solved?}
     (1..9).to_a - solved_neighbours.map{|cell| cell.value}
+  end
+
+  def candidates_for(current_cell)
+    [:row, :column, :box].inject((1..9).to_a) do |candidates, group|
+      candidates & group_candidates_for(current_cell, group)
+    end
   end
 
 end

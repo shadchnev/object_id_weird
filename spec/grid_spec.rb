@@ -1,7 +1,6 @@
 require 'grid'
 
 describe Grid do 
-  context 'initialization' do
     let(:testinput){ 
      "+---+---+---+
       |...|8.9|...|
@@ -18,6 +17,9 @@ describe Grid do
       +---+---+---+"
     }
     let(:grid){Grid.new(testinput)}
+    let(:unsolved_cell){grid.cell_at(row:1, column:1)}
+
+  context 'initialization' do
 
     it 'should load a graphical input correctly' do
       expect(grid.to_s).to eq "000809000836500170450003062701040090360000580"\
@@ -35,11 +37,26 @@ describe Grid do
     it 'should know when it is not solved' do
       expect(grid).not_to be_solved 
     end
+  end
 
-    
-    # expect(grid(0,0).solved?).to be_false
-    # expect(grid(0,4).solved?).to be_true
-    # expect(grid())
+  context 'should know the candidate values' do
+
+    it "from its row, if not solved" do
+      expect(grid.group_candidates_for(unsolved_cell, :row).sort).to eq([1,2,3,4,5,6,7]) 
+    end
+
+    it "from its column, if not solved" do
+      expect(grid.group_candidates_for(unsolved_cell, :column).sort).to eq([2,5,6,9]) 
+    end
+
+    it "from its box, if not solved" do
+      expect(grid.group_candidates_for(unsolved_cell, :box).sort).to eq([1,2,7,9]) 
+    end
+  
+    it 'for the current cell, if not solved' do
+      expect(grid.candidates_for(unsolved_cell).sort).to eq([2]) 
+    end
+'
   
 
   end
