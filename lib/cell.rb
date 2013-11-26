@@ -17,6 +17,6 @@ class Cell
   end
 
   def box
-    [(row + 2)/3, (column + 2)/3]
+    (((row + 2)/3)*3 + (column + 2)/3 - 3)
   end
 end

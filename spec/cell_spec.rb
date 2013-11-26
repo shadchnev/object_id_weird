@@ -18,7 +18,7 @@ describe Cell do
   end
 
   it 'should know what box it\'s in' do
-    expect(grid.cell_at(row:5, column:7).box).to eq([2,3])
+    expect(grid.cell_at(row:1, column:9).box).to eq(3)
   end
 
   it 'should know if its solved' do

@@ -18,6 +18,7 @@ describe Grid do
     }
     let(:grid){Grid.new(testinput)}
     let(:unsolved_cell){grid.cell_at(row:1, column:1)}
+    let(:duff_solution){"794746223874651872635419371982736429313645192736491278346192635412937462398457456"}
 
   context 'initialization' do
 
@@ -63,6 +64,24 @@ describe Grid do
       expect(unsolved_cell.value).to eq 0
       grid.solve_cell_at(row:1, column:1)
       expect(unsolved_cell.value).to eq 2
+    end
+
+    it 'should solve the puzzle, if all cells are soluble' do
+      grid.solve
+      expect(grid).to be_solved 
+    end
+
+  end
+
+   context 'solved?' do
+    it 'should verify the solution is correct' do
+      grid.solve
+      expect(grid).to be_valid
+    end
+
+    it 'should verify an incorrect solution is incorrect' do
+      bad_grid = Grid.new(duff_solution)
+      expect(bad_grid).to_not be_valid
     end
   
   end

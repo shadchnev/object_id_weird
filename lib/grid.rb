@@ -57,5 +57,24 @@ class Grid
     current_cell.value = possibilities.first if possibilities.length == 1 
   end
 
+  def solve
+   puts '' 
+   while !solved?
+      cells.each{|cell| solve_cell(cell) if !cell.solved?}
+    end
+  end
+
+  def valid?
+    [:row, :column, :box].each do |group|
+      (1..9).each do |element|
+        cells_in_group = cells.select{|cell| cell.send(group) == element }
+        values_in_group = cells_in_group.inject([]) do |values, cell|
+          values << cell.value
+        end
+        return false if values_in_group.length != values_in_group.uniq.length
+      end
+    end
+    true
+  end
 end
 
