@@ -56,8 +56,15 @@ describe Grid do
     it 'for the current cell, if not solved' do
       expect(grid.candidates_for(unsolved_cell).sort).to eq([2]) 
     end
-'
-  
-
   end
-end
+
+  context 'solver' do
+    it 'should set cell to a number if that number is the only candidate' do
+      expect(unsolved_cell.value).to eq 0
+      grid.solve_cell_at(row:1, column:1)
+      expect(unsolved_cell.value).to eq 2
+    end
+  
+  end
+
+end # of describe

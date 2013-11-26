@@ -48,4 +48,14 @@ class Grid
     end
   end
 
+  def solve_cell_at(row:row, column:column)
+    solve_cell(cell_at(row:row, column:row))
+  end
+
+  def solve_cell(current_cell)
+    possibilities = candidates_for(current_cell)
+    current_cell.value = possibilities.first if possibilities.length == 1 
+  end
+
 end
+
