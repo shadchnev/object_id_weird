@@ -2,6 +2,9 @@ require 'cell'
 
 class Grid
   
+  GROUPS = [:row, :column, :box]
+  GROUP_INDEX = (1..9).to_a
+
   attr_reader :cells
 
   def initialize(input)
@@ -12,8 +15,8 @@ class Grid
 
   def initialize_cells(normalised_input)
     @cells = []
-    (1..9).each do |row|
-      (1..9).each do |column|
+    GROUP_INDEX.each do |row|
+      GROUP_INDEX.each do |column|
         value = normalised_input[(row-1)*9 + (column-1)].to_i
         @cells << Cell.new(row:row, column:column, value:value)
       end
@@ -39,11 +42,11 @@ class Grid
   def group_candidates_for(current_cell, group)
     neighbours = cells.select{|cell| cell.send(group) == current_cell.send(group)}
     solved_neighbours = neighbours.select{|cell| cell.solved?}
-    (1..9).to_a - solved_neighbours.map{|cell| cell.value}
+    GROUP_INDEX - solved_neighbours.map{|cell| cell.value}
   end
 
   def candidates_for(current_cell)
-    [:row, :column, :box].inject((1..9).to_a) do |candidates, group|
+    GROUPS.inject(GROUP_INDEX) do |candidates, group|
       candidates & group_candidates_for(current_cell, group)
     end
   end
@@ -65,16 +68,25 @@ class Grid
   end
 
   def valid?
-    [:row, :column, :box].each do |group|
-      (1..9).each do |element|
-        cells_in_group = cells.select{|cell| cell.send(group) == element }
-        values_in_group = cells_in_group.inject([]) do |values, cell|
-          values << cell.value
-        end
-        return false if values_in_group.length != values_in_group.uniq.length
+    GROUPS.each do |group_type|
+      GROUP_INDEX.each do |group_number|
+        values_in_group = all_values_of(cells_in_group(group_number, group_type))
+        return false if has_duplicates(values_in_group)
       end
     end
     true
+  end
+  
+  def has_duplicates(array)
+    array.length != array.uniq.length
+  end
+
+  def cells_in_group(group_number, group_type)
+    cells.select{|cell| cell.send(group_type) == group_number }
+  end
+
+  def all_values_of(cells)
+    cells.inject([]){|values, cell| values << cell.value }
   end
 end
 
