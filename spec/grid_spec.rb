@@ -71,9 +71,10 @@ describe Grid do
       expect(grid).to be_solved 
     end
 
-    it 'should stop if looped through all cells without changing anything' do
+    it 'should give a solution for an empty grid' do
+    empty_grid = Grid.new('.'*81)
+    expect(empty_grid.solve).to be_solved
     end
-
   end
 
    context 'solved?' do

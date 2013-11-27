@@ -36,7 +36,7 @@ class Grid
   end
 
   def solved?
-    cells.all? {|cell| cell.solved?}
+    cells.all? {|cell| cell.solved?} && valid?
   end
 
   def group_candidates_for(current_cell, group)
@@ -57,15 +57,21 @@ class Grid
 
   def solve_cell(current_cell)
     possibilities = candidates_for(current_cell)
-    current_cell.value = possibilities.first if possibilities.length == 1 
+    current_cell.value = possibilities.first if possibilities.length == 1
   end
 
   def solve
     raise 'Invalid input' unless valid?
     while !solved?
+      solved_cells = solved_cell_count
       cells.each{|cell| solve_cell(cell) if !cell.solved?}
+      raise "Error" if solved_cells == solved_cell_count
     end
     raise 'Generated invalid solution' unless valid?
+  end
+
+  def solved_cell_count
+    cells.select {|cell| cell.solved?}.count
   end
 
   def valid?
@@ -78,9 +84,9 @@ class Grid
     true
   end
   
-  def has_duplicates(array)
-    array.delete(0)
-    array.length != array.uniq.length
+  def has_duplicates(values)
+    values.delete(0)
+    values.length != values.uniq.length
   end
 
   def cells_in_group(group_number, group_type)
