@@ -1,5 +1,10 @@
+module Kernel
+  def puts(n)
+  end
+end
+
 require_relative 'cell'
-gem 'pry-byebug'
+# gem 'pry-byebug'
 
 class Grid
   
@@ -24,7 +29,7 @@ class Grid
     GROUP_INDEX.each do |row|
       GROUP_INDEX.each do |column|
         value = normalised_input[(row-1)*9 + (column-1)].to_i
-        @cells << Cell.new(row:row, column:column, value:value)
+        @cells << Cell.new(row, column, value)
       end
     end
   end
@@ -37,7 +42,7 @@ class Grid
     cells.map{|cell| cell.to_s}.join('')
   end
 
-  def cell_at(row:row, column:column)
+  def cell_at(row, column)
     cells.find{|cell| cell.row == row && cell.column == column}
   end
 
@@ -57,8 +62,8 @@ class Grid
     end
   end
 
-  def solve_cell_at(row:row, column:column)
-    solve_cell(cell_at(row:row, column:row))
+  def solve_cell_at(row, column)
+    solve_cell(cell_at(row, row))
   end
 
   def solve_cell(current_cell)
@@ -101,15 +106,20 @@ class Grid
     guess_grid = Grid.deep_copy(self)
     # puts guess_grid.cells[0].inspect
     guess_cell = guess_grid.cells.find { |cell| !cell.solved?}
-    puts "Guess cell#{guess_cell.object_id}: #{guess_cell.row}, #{guess_cell.column}. value: #{guess_cell.value.inspect}"
+    puts "Guess cell: #{guess_cell.object_id}: #{guess_cell.row}, #{guess_cell.column}. value: #{guess_cell.value.inspect}"
     # p guess_cell
     guess_candidates = candidates_for(guess_cell)
-    puts "Guess cell#{guess_cell.object_id}: #{guess_cell.row}, #{guess_cell.column}. value: #{guess_cell.value.inspect}"
-    
+    puts "GUEST CANDIDATES:"
+    puts guess_candidates.inspect + guess_candidates.object_id.to_s
+
+    # print "before guess_candidates.each. Guess cell: #{guess_cell.object_id}: #{guess_cell.row}, #{guess_cell.column}. value: #{guess_cell.value.inspect}"
+    print "BEFORE #{guess_candidates.object_id}\n"
     guess_candidates.each do |candidate|
+      # puts "inside guest_candidates.each. guess candidates: #{guess_candidates} for #{guess_cell.object_id}: #{guess_cell.row}, #{guess_cell.column}"
+      print "AFTER #{guess_candidates.object_id}"
+      puts guess_candidates.inspect + guess_candidates.object_id.to_s
       # depth = Kernel.caller.select{|l| l.match /solve/}.count
       # puts "Depth: #{depth}"
-      puts "guess candidates: #{guess_candidates} for #{guess_cell.object_id} #{guess_cell.row}, #{guess_cell.column}"
       # puts guess_grid.inspect
       # return nil if guess_candidates.empty?
       # guess_cell.value = guess_candidates.shift

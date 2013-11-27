@@ -2,7 +2,7 @@ class Cell
   attr_reader :row, :column
   attr_accessor :value
 
-  def initialize(row:row, column:column, value:value)
+  def initialize(row, column, value)
     @row = row
     @column = column
     @value = value
