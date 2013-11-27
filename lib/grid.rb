@@ -61,16 +61,17 @@ class Grid
   end
 
   def solve
-   puts '' 
-   while !solved?
+    raise 'Invalid input' unless valid?
+    while !solved?
       cells.each{|cell| solve_cell(cell) if !cell.solved?}
     end
+    raise 'Generated invalid solution' unless valid?
   end
 
   def valid?
     GROUPS.each do |group_type|
-      GROUP_INDEX.each do |group_number|
-        values_in_group = all_values_of(cells_in_group(group_number, group_type))
+      GROUP_INDEX.each do |group_index|
+        values_in_group = all_values_of(cells_in_group(group_index, group_type))
         return false if has_duplicates(values_in_group)
       end
     end
@@ -78,6 +79,7 @@ class Grid
   end
   
   def has_duplicates(array)
+    array.delete(0)
     array.length != array.uniq.length
   end
 

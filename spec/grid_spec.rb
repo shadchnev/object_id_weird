@@ -18,7 +18,7 @@ describe Grid do
     }
     let(:grid){Grid.new(testinput)}
     let(:unsolved_cell){grid.cell_at(row:1, column:1)}
-    let(:duff_solution){"794746223874651872635419371982736429313645192736491278346192635412937462398457456"}
+    
 
   context 'initialization' do
 
@@ -71,6 +71,9 @@ describe Grid do
       expect(grid).to be_solved 
     end
 
+    it 'should stop if looped through all cells without changing anything' do
+    end
+
   end
 
    context 'solved?' do
@@ -78,12 +81,22 @@ describe Grid do
       grid.solve
       expect(grid).to be_valid
     end
+  end
 
-    it 'should verify an incorrect solution is incorrect' do
-      bad_grid = Grid.new(duff_solution)
+  context 'validity checker' do
+    it 'should return false for an incorrect solution' do
+      bad_grid = Grid.new("794746223874651872635419371982736429313645192736491278346192635412937462398457456")
       expect(bad_grid).to_not be_valid
     end
   
+    it 'should return false for an obviously invalid input' do
+      invalid_input = Grid.new("1.. .1. ...  ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ")
+      expect(invalid_input).to_not be_valid
+    end
+
   end
 
 end # of describe
+
+
+
