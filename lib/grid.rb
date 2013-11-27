@@ -1,11 +1,12 @@
-require 'cell'
+require_relative 'cell'
+gem 'pry-byebug'
 
 class Grid
   
   GROUPS = [:row, :column, :box]
   GROUP_INDEX = (1..9).to_a
 
-  attr_reader :cells
+  attr_accessor :cells
 
   def initialize(input)
     normalised_input = input_interpreter(input)
@@ -57,17 +58,46 @@ class Grid
 
   def solve_cell(current_cell)
     possibilities = candidates_for(current_cell)
-    current_cell.value = possibilities.first if possibilities.length == 1
+    if possibilities.length == 1
+      current_cell.value = possibilities.first 
+      p "solved:" + current_cell.inspect
+    end
   end
 
-  def solve
-    raise 'Invalid input' unless valid?
+  def solve()
+    # raise 'Invalid input' unless valid?
+    if !valid?
+      # puts 'following is invalid:'
+      # p self
+      raise 'invalid'
+    end
     while !solved?
-      solved_cells = solved_cell_count
+      solved_cells = solved_cell_count()
       cells.each{|cell| solve_cell(cell) if !cell.solved?}
-      raise "Error" if solved_cells == solved_cell_count
+      try = true
+      try = make_a_guess if solved_cells == solved_cell_count()
+      # if try.nil? #REMOVEME
+      #   puts 'guessing returned nill'
+      # end
+      return nil if try.nil?
     end
     raise 'Generated invalid solution' unless valid?
+  end
+
+  def make_a_guess
+    # puts 'make a guess'
+    guess_grid = self.dup
+    guess_cell = guess_grid.cells.find { |cell| !cell.solved?}
+    # p guess_cell
+    guess_candidates = candidates_for(guess_cell)
+    loop do 
+      # p "guess candidates: #{guess_candidates} for #{guess_cell.row}, #{guess_cell.column}"
+      # puts guess_grid.inspect
+      return nil if guess_candidates.empty?
+      guess_cell.value = guess_candidates.shift
+      break unless guess_grid.solve == nil
+    end
+    self.cells = guess_grid.cells if guess_grid.solved?
   end
 
   def solved_cell_count
@@ -95,6 +125,23 @@ class Grid
 
   def all_values_of(cells)
     cells.inject([]){|values, cell| values << cell.value }
+  end
+
+  def inspect
+    s = self.to_s
+    puts "+---+---+---+"
+    puts "|" + s[0..2] + '|' + s[3..5] + '|' + s[6..8] + '|' 
+    puts "|" + s[9..11] + '|' + s[12..14] + '|' + s[15..17] + '|' 
+    puts "|" + s[18..20] + '|' + s[21..23] + '|' + s[24..26] + '|' 
+    puts "+---+---+---+"
+    puts "|" + s[27..29] + '|' + s[30..32] + '|' + s[33..35] + '|' 
+    puts "|" + s[36..38] + '|' + s[39..41] + '|' + s[42..44] + '|' 
+    puts "|" + s[45..47] + '|' + s[48..50] + '|' + s[51..53] + '|' 
+    puts "+---+---+---+"
+    puts "|" + s[54..56] + '|' + s[57..59] + '|' + s[60..62] + '|' 
+    puts "|" + s[63..65] + '|' + s[66..68] + '|' + s[69..71] + '|' 
+    puts "|" + s[72..74] + '|' + s[75..77] + '|' + s[78..80] + '|' 
+    puts "+---+---+---+"
   end
 end
 
