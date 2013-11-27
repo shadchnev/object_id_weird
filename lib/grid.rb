@@ -1,7 +1,7 @@
-module Kernel
-  def puts(n)
-  end
-end
+# module Kernel
+#   def puts(n)
+#   end
+# end
 
 require_relative 'cell'
 # gem 'pry-byebug'
@@ -113,10 +113,12 @@ class Grid
     puts guess_candidates.inspect + guess_candidates.object_id.to_s
 
     # print "before guess_candidates.each. Guess cell: #{guess_cell.object_id}: #{guess_cell.row}, #{guess_cell.column}. value: #{guess_cell.value.inspect}"
-    print "BEFORE #{guess_candidates.object_id}\n"
+    print "BEFORE GC guest candidates objID: #{guess_candidates.object_id}, guess cell objID: #{guess_cell.object_id}\n"
+    GC.start
+    print "AFTER GC BEFORE guest candidates objID: #{guess_candidates.object_id}, guess cell objID: #{guess_cell.object_id}\n"
     guess_candidates.each do |candidate|
       # puts "inside guest_candidates.each. guess candidates: #{guess_candidates} for #{guess_cell.object_id}: #{guess_cell.row}, #{guess_cell.column}"
-      print "AFTER #{guess_candidates.object_id}"
+      print "AFTER guest candidates objID: #{guess_candidates.object_id}, guess cell objID: #{guess_cell.object_id}\n"
       puts guess_candidates.inspect + guess_candidates.object_id.to_s
       # depth = Kernel.caller.select{|l| l.match /solve/}.count
       # puts "Depth: #{depth}"
