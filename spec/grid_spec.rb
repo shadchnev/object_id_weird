@@ -62,6 +62,7 @@ describe Grid do
   context 'solver' do
     it 'should set cell to a number if that number is the only candidate' do
       expect(unsolved_cell.value).to eq 0
+      # expect(grid).to receive(:solve_cell)
       grid.solve_cell_at(row:1, column:1)
       expect(unsolved_cell.value).to eq 2
     end
@@ -70,7 +71,9 @@ describe Grid do
       grid.solve
       expect(grid).to be_solved 
     end
+  end
 
+  context 'solve hard problems' do
     it 'should give a solution for an empty grid' do
       empty_grid = Grid.new('.'*81)
       # expect(empty_grid.solve).to be_solved
@@ -96,6 +99,15 @@ describe Grid do
       expect(invalid_input).to_not be_valid
     end
 
+  end
+
+  context 'grid deep-copier' do
+   it 'should work' do
+     old_grid = Grid.new(testinput)
+     new_grid = Grid.deep_copy(old_grid)
+     expect(old_grid.cell_at(row:1, column:1).object_id).to_not \
+      eq(new_grid.cell_at(row:1, column:1).object_id)
+    end
   end
 
 end # of describe
