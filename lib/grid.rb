@@ -60,13 +60,18 @@ class Grid
 
     guess_cell = guess_grid.cells.find { |cell| !cell.solved?}
     return if guess_cell.nil?
-
     guess_candidates = candidates_for(guess_cell)
 
+    call_id = rand(36**10).to_s(36)
+    print "c#{guess_candidates.length}- "
+    print "call:#{call_id} "
     print "#{guess_candidates.object_id}"
-    
-    guess_candidates.each do |candidate|
-      print " v #{guess_candidates.object_id}"
+    old = guess_candidates.object_id
+    guess_candidates.each_with_index do |candidate,i|
+
+      print " v #{guess_candidates.object_id} @ with_index:#{i}"
+      print " ??? " if old!=guess_candidates.object_id
+      print "call:#{call_id}"
       @@iteration += 1 
 
       depth = Kernel.caller.select{|l| l.match /solve/}.count
