@@ -1,13 +1,8 @@
-module Kernel
-  def puts(n)
-  end
-end
-
 require_relative 'cell'
 # gem 'pry-byebug'
 
 class Grid
-  @@foo = 0
+  @@iteration = 0
   GROUPS = [:row, :column, :box]
   GROUP_INDEX = (1..9).to_a
 
@@ -18,7 +13,6 @@ class Grid
   end
 
   def self.deep_copy(instance)
-    # Marshal.load(Marshal.dump(instance))
     Grid.new(instance.to_s)
   end
 
@@ -58,47 +52,31 @@ class Grid
 
 
   def solve()
-    puts "entering solve()"
     try = make_a_guess
   end
 
   def make_a_guess
-    # puts 'make a guess'
-    puts "entering make_a_guess()"
-    p self
     guess_grid = Grid.deep_copy(self)
-    # puts guess_grid.cells[0].inspect
+
     guess_cell = guess_grid.cells.find { |cell| !cell.solved?}
     return if guess_cell.nil?
-    puts "Guess cell: #{guess_cell.object_id}: #{guess_cell.row}, #{guess_cell.column}. value: #{guess_cell.value.inspect}"
-    # p guess_cell
-    guess_candidates = candidates_for(guess_cell)
-    puts "GUEST CANDIDATES:"
-    puts guess_candidates.inspect + guess_candidates.object_id.to_s
 
-    # print "before guess_candidates.each. Guess cell: #{guess_cell.object_id}: #{guess_cell.row}, #{guess_cell.column}. value: #{guess_cell.value.inspect}"
+    guess_candidates = candidates_for(guess_cell)
 
     print "#{guess_candidates.object_id}"
     
     guess_candidates.each do |candidate|
-      # puts "inside guest_candidates.each. guess candidates: #{guess_candidates} for #{guess_cell.object_id}: #{guess_cell.row}, #{guess_cell.column}"
       print " v #{guess_candidates.object_id}"
-      @@foo += 1 
-      print " @ #{@@foo}\n"
-      # print "#{old} v #{nu}"
+      @@iteration += 1 
 
-      # puts guess_candidates.inspect + guess_candidates.object_id.to_s
       depth = Kernel.caller.select{|l| l.match /solve/}.count
-      # print "Depth: #{depth}"
-      # puts guess_grid.inspect
-      # return nil if guess_candidates.empty?
-      # guess_cell.value = guess_candidates.shift
-      # break unless guess_grid.solve == nil #Try another candidate if that one lead to a dead end
+      print " @ iter #{@@iteration}"
+      print " @ depth #{depth}\n"
+
       guess_cell.value = candidate
       return true if guess_grid.solve
     end
     if guess_grid.solved?
-      puts "Guess grid solved"
       self.cells = guess_grid.cells 
     end
   end
