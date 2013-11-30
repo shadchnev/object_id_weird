@@ -63,21 +63,19 @@ class Grid
     guess_candidates = candidates_for(guess_cell)
 
     call_id = rand(36**10).to_s(36)
-    print "c#{guess_candidates.length}- "
-    print "call:#{call_id} "
-    print "#{guess_candidates.object_id}"
+    print "#{guess_candidates.length}:"
+    print "#{call_id}:"
+    print "#{guess_candidates.object_id}:"
     old = guess_candidates.object_id
     guess_candidates.each_with_index do |candidate,i|
-
-      print " v #{guess_candidates.object_id} @ with_index:#{i}"
-      print " ??? " if old!=guess_candidates.object_id
-      print "call:#{call_id}"
+      print "#{guess_candidates.object_id}:#{i}:"
+      print "#{old != guess_candidates.object_id}:"
+      print "#{call_id}:"
       @@iteration += 1 
 
       depth = Kernel.caller.select{|l| l.match /solve/}.count
-      print " @ iter #{@@iteration}"
-      print " @ depth #{depth}\n"
-
+      print "#{@@iteration}:"
+      puts "#{depth}"
       guess_cell.value = candidate
       return true if guess_grid.solve
     end
@@ -94,8 +92,5 @@ class Grid
     cells.select{|cell| cell.send(group_type) == group_number }
   end
 
-
-  def inspect
-  end
 end
 
