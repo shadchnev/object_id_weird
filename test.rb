@@ -1,3 +1,4 @@
-require_relative 'lib/grid'
+require_relative 'lib/bug'
 
-Grid.new('.' * 81).solve
+Bug.new.recurse
+puts
